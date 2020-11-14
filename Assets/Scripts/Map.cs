@@ -7,8 +7,13 @@ public class Map : MonoBehaviour
 {
     public static float cameraWidth;
     public static float cameraHeight;
+    public static float interactRange = 2;
     private List<Player> players;
     private List<Ant> ants = new List<Ant>();
+    private List<Nest> nests = new List<Nest>();
+    private static List<Food> foods = new List<Food>();
+    private int foodFrameCounter = 0;
+    private int foodFrameLoopback = 600; 
     void Start()
     {
         // Get width and height in world units
@@ -18,19 +23,17 @@ public class Map : MonoBehaviour
         // Initialize starting territory positions for each player fairly
         // (each player has the same starting area)
 
-        List<Territory> territories = new List<Territory>
+        players = new List<Player>()
         {
-            // NOTE: currently only two players, algorithm for this placement for n players should be implemented later
-            new Territory(new Vector2(-cameraWidth / 4, 0)),
-            new Territory(new Vector2(cameraWidth / 4, 0))
+            new Player(Color.green),
+            new Player(Color.blue)
         };
 
-        
-        this.players = new List<Player>()
-        {
-            new Player(Color.green, territories[0]),
-            new Player(Color.blue, territories[1])
-        };
+        nests.Add(new Nest(new Vector2(-cameraWidth / 4, 0), players[0]));
+        nests.Add(new Nest(new Vector2(cameraWidth / 4, 0), players[1]));
+
+        players[0].AddNest(nests[0]);
+        players[1].AddNest(nests[1]);
 
         DrawMap();
     }
@@ -38,14 +41,44 @@ public class Map : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown("space"))
+        // Food
+        if (foodFrameCounter == 0)
+        {
+            Food newFood = new Food();
+            foods.Add(newFood);
+        }
+        foodFrameCounter = (foodFrameCounter + 1) % foodFrameLoopback;
+
+        // Ants
+        if (Input.GetKeyDown("space"))
         {
             WorkerAnt newWorkerAnt = new WorkerAnt(players[0].GetSelectedNest());
             ants.Add(newWorkerAnt);
         }
 
+        
+
+        List<Food> foodsToRemove = new List<Food>();
+        foreach (var food in foods)
+        {
+            foreach(var ant in ants)
+            {
+                if (Vector2.Distance(food.position, ant.position) < interactRange)
+                {
+                    ant.nest.GetPlayer().foodAcquired++;
+                    Destroy(food.foodGameObject);
+                    foodsToRemove.Add(food);
+                }
+            }
+        }
+
         foreach (var ant in ants)
             ant.Move();
+
+        foreach (var foodToRemove in foodsToRemove)
+        {
+            foods.Remove(foodToRemove);
+        }
     }
 
     private Player ClosestPlayer(Vector2 pixel)
@@ -57,15 +90,15 @@ public class Map : MonoBehaviour
 
         for (int i = 0; i < players.Count; i++)
         {
-            var currentPlayerTerritories = players[i].GetTerritories();
-            for (int j = 0; j < currentPlayerTerritories.Count; j++)
+            var currentPlayerNests = players[i].GetNests();
+            for (int j = 0; j < currentPlayerNests.Count; j++)
             {
-                Vector2 currentSeed = currentPlayerTerritories[j].GetNest().GetPosition();
-                float currentTerritoryDistance = Vector2.Distance(pixelPos, currentSeed);
+                Vector2 currentSeed = currentPlayerNests[j].GetPosition();
+                float currentNestDistance = Vector2.Distance(pixelPos, currentSeed);
 
-                if (currentTerritoryDistance < minDistance)
+                if (currentNestDistance < minDistance)
                 {
-                    minDistance = currentTerritoryDistance;
+                    minDistance = currentNestDistance;
                     closestPlayer = players[i];
                 }
             }
@@ -92,5 +125,10 @@ public class Map : MonoBehaviour
         boundaryTexture.filterMode = FilterMode.Bilinear;
         boundaryTexture.Apply();
         GetComponent<SpriteRenderer>().sprite = Sprite.Create(boundaryTexture, new Rect(0, 0, textureWidth, textureHeight), Vector2.one * 0.5f, 1);
+    }
+
+    public static List<Food> GetFoods()
+    {
+        return foods;
     }
 }

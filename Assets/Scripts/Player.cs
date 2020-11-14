@@ -6,13 +6,14 @@ public class Player
 {
     public Color color;
     public Nest selectedNest;
-    public List<Territory> ownedTerritories;
+    public List<Nest> ownedNests;
+    public int foodAcquired;
 
-    public Player(Color color, Territory startingTerritory)
+    public Player(Color color)
     {
         this.color = color;
-        ownedTerritories = new List<Territory>() { startingTerritory };
-        selectedNest = startingTerritory.GetNest();
+        ownedNests = new List<Nest>();
+        foodAcquired = 0;
     }
 
     public Color GetColor()
@@ -25,13 +26,14 @@ public class Player
         return selectedNest;
     }
     
-    public List<Territory> GetTerritories()
+    public List<Nest> GetNests()
     {
-        return ownedTerritories;
+        return ownedNests;
     }
 
-    public void AddTeritory(Territory t)
+    public void AddNest(Nest n)
     {
-        ownedTerritories.Add(t);
+        ownedNests.Add(n);
+        selectedNest = n;
     }
 }

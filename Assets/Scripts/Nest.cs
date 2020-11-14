@@ -7,10 +7,12 @@ public class Nest
 {
     private Vector2 position;
     private Sprite sprite;
+    private Player player;
 
-    public Nest(Vector2 position)
+    public Nest(Vector2 position, Player player)
     {
         this.position = position;
+        this.player = player;
 
         GameObject nestObject = new GameObject("Nest");
         nestObject.transform.position = position;
@@ -22,5 +24,10 @@ public class Nest
     public Vector2 GetPosition()
     {
         return position;
+    }
+
+    public Player GetPlayer()
+    {
+        return player;
     }
 }
