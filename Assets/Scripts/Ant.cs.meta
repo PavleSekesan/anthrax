@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 831c6d96bd74795429d012cac495956e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - antGameObject: {fileID: 5583380257619245738, guid: f96c7e5d4cf9e274fabb63b5c9ce4416,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -16,7 +16,7 @@ public class Nest
         nestObject.transform.position = position;
         var spriteRenderer = nestObject.AddComponent<SpriteRenderer>();
         spriteRenderer.sprite = Resources.Load<Sprite>("Sprites/nest");
-
+        spriteRenderer.sortingOrder = -1;
     }
 
     public Vector2 GetPosition()

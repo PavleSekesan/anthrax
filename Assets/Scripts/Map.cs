@@ -5,9 +5,10 @@ using UnityEngine;
 
 public class Map : MonoBehaviour
 {
-    public float cameraWidth;
-    public float cameraHeight;
-    private List<Territory> territories;
+    public static float cameraWidth;
+    public static float cameraHeight;
+    private List<Player> players;
+    private List<Ant> ants = new List<Ant>();
     void Start()
     {
         // Get width and height in world units
@@ -16,42 +17,61 @@ public class Map : MonoBehaviour
 
         // Initialize starting territory positions for each player fairly
         // (each player has the same starting area)
+
         List<Territory> territories = new List<Territory>
         {
             // NOTE: currently only two players, algorithm for this placement for n players should be implemented later
-            new Territory(new Vector2(-cameraWidth / 4, 0), 1, Color.green),
-            new Territory(new Vector2(cameraWidth / 4, 0), 2, Color.blue)
+            new Territory(new Vector2(-cameraWidth / 4, 0)),
+            new Territory(new Vector2(cameraWidth / 4, 0))
         };
-        this.territories = territories;
+
+        
+        this.players = new List<Player>()
+        {
+            new Player(Color.green, territories[0]),
+            new Player(Color.blue, territories[1])
+        };
+
         DrawMap();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(Input.GetKeyDown("space"))
+        {
+            WorkerAnt newWorkerAnt = new WorkerAnt(players[0].GetSelectedNest());
+            ants.Add(newWorkerAnt);
+        }
+
+        foreach (var ant in ants)
+            ant.Move();
     }
 
-    int ClosestTerritoryIndex(Vector2 pixel)
+    private Player ClosestPlayer(Vector2 pixel)
     {
         Vector2 pixelPos = new Vector2((float)(-cameraWidth / 2 + pixel.x), (float)(cameraHeight / 2 - pixel.y)); 
 
         float minDistance = float.PositiveInfinity;
-        int closestTerritoryIndex = -1;
+        Player closestPlayer = null;
 
-        for (int i = 0; i < territories.Count; i++)
+        for (int i = 0; i < players.Count; i++)
         {
-            Vector2 currentSeed = territories[i].GetNest().GetPosition();
-            float currentTerritoryDistance = Vector2.Distance(pixelPos, currentSeed);
-            
-            if (currentTerritoryDistance < minDistance)
+            var currentPlayerTerritories = players[i].GetTerritories();
+            for (int j = 0; j < currentPlayerTerritories.Count; j++)
             {
-                minDistance = currentTerritoryDistance;
-                closestTerritoryIndex = i;
+                Vector2 currentSeed = currentPlayerTerritories[j].GetNest().GetPosition();
+                float currentTerritoryDistance = Vector2.Distance(pixelPos, currentSeed);
+
+                if (currentTerritoryDistance < minDistance)
+                {
+                    minDistance = currentTerritoryDistance;
+                    closestPlayer = players[i];
+                }
             }
         }
 
-        return closestTerritoryIndex;
+        return closestPlayer;
     }
 
     void DrawMap()
@@ -65,8 +85,8 @@ public class Map : MonoBehaviour
             for (int x = 0; x < textureWidth; x++)
             {
                 Vector2 pixel = new Vector2(x, y);
-                Territory closestTerritory = territories[ClosestTerritoryIndex(pixel)];
-                boundaryTexture.SetPixel(x, y, closestTerritory.GetColor());
+                Player closestPlayer = ClosestPlayer(pixel);
+                boundaryTexture.SetPixel(x, y, closestPlayer.GetColor());
             }
         }
         boundaryTexture.filterMode = FilterMode.Bilinear;
