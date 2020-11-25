@@ -4,36 +4,39 @@ using UnityEngine;
 
 public class Player
 {
-    public Color color;
-    public Nest selectedNest;
-    public List<Nest> ownedNests;
-    public int foodAcquired;
+    private Color color;
+    private Nest selectedNest;
+    private int foodAcquired;
+    private string spawnAntKey;
 
-    public Player(Color color)
+    public Color Color
     {
-        this.color = color;
-        ownedNests = new List<Nest>();
+        get { return color; }
+    }
+    public Nest SelectedNest
+    {
+        get { return selectedNest; }
+    }
+    public string SpawnAntKey
+    {
+        get { return spawnAntKey; }
+    }
+
+    public Player(Color color, string spawnAntKey)
+    {
+        this.color= color;
+        selectedNest = null;
         foodAcquired = 0;
+        this.spawnAntKey = spawnAntKey;
     }
 
-    public Color GetColor()
+    public void SelectNest(Nest n)
     {
-        return color;
-    }
-
-    public Nest GetSelectedNest()
-    {
-        return selectedNest;
-    }
-    
-    public List<Nest> GetNests()
-    {
-        return ownedNests;
-    }
-
-    public void AddNest(Nest n)
-    {
-        ownedNests.Add(n);
         selectedNest = n;
+    }
+
+    public void IncrementFoodAcquired()
+    {
+        foodAcquired++;
     }
 }

@@ -9,6 +9,16 @@ public class Nest
     private Sprite sprite;
     private Player player;
 
+    public Vector2 Position
+    {
+        get { return position; }
+    }
+
+    public Player Player
+    {
+        get { return player; }
+    }
+
     public Nest(Vector2 position, Player player)
     {
         this.position = position;
@@ -19,15 +29,5 @@ public class Nest
         var spriteRenderer = nestObject.AddComponent<SpriteRenderer>();
         spriteRenderer.sprite = Resources.Load<Sprite>("Sprites/nest");
         spriteRenderer.sortingOrder = -1;
-    }
-
-    public Vector2 GetPosition()
-    {
-        return position;
-    }
-
-    public Player GetPlayer()
-    {
-        return player;
     }
 }
