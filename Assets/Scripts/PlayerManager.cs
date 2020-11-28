@@ -14,8 +14,8 @@ public class PlayerManager : MonoBehaviour
     void Start()
     {
         players = new List<Player>();
-        players.Add(new Player(Color.green, "space", "tab"));
-        players.Add(new Player(Color.blue, "return", "right shift"));
+        players.Add(new Player(Color.green, "space", "tab", "q", "w", "s", "a", "d"));
+        players.Add(new Player(Color.blue, "return", "right shift", "p", "up", "down", "left", "right"));
     }
 
     // Update is called once per frame
@@ -35,13 +35,14 @@ public class PlayerManager : MonoBehaviour
                 Nest newSelectedNest = player.SelectedNest;
                 var allNests = NestManager.Nests;
                 bool foundCurrentSelectedNestIndex = false;
-                for (int nestIndex = 0; nestIndex < allNests.Count; nestIndex++)
+                bool foundNewSelectedNest = false;
+                for (int nestIndex = 0; !foundNewSelectedNest; nestIndex = (nestIndex + 1) % allNests.Count)
                 {
                     Nest currentNest = allNests[nestIndex];
                     if (foundCurrentSelectedNestIndex && currentNest.Player == player)
                     {
                         newSelectedNest = currentNest;
-                        break;
+                        foundNewSelectedNest = true;
                     }
                     if(currentNest == player.SelectedNest)
                     {
@@ -56,9 +57,19 @@ public class PlayerManager : MonoBehaviour
                 player.SelectNest(newSelectedNest);
             }
 
-            // Spawn ants
-            if (Input.GetKeyDown(player.SpawnAntKey))
+            // Build nest
+            int newNestCost = Nest.foodCost;
+            if (Input.GetKeyDown(player.BuildNestKey) && player.FoodAcquired >= Nest.foodCost)
             {
+                player.IncrementFoodAcquired(-newNestCost);
+                AntManager.BuildNest(player);
+            }
+
+            // Spawn ants
+            int workerAntCost = WorkerAnt.foodCost;
+            if (Input.GetKeyDown(player.SpawnAntKey) && player.FoodAcquired >= workerAntCost)
+            {
+                player.IncrementFoodAcquired(-workerAntCost);
                 AntManager.SpawnAnt(player);
             }
         }

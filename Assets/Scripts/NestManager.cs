@@ -10,6 +10,12 @@ public class NestManager : MonoBehaviour
         get { return nests; }
     }
 
+    public static void SpawnNest(Vector2 location, Player player)
+    {
+        Nest newNest = new Nest(location, player);
+        nests.Add(newNest);
+    }
+
     // Start is called before the first frame update
     void Start()
     {

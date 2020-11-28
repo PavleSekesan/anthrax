@@ -9,6 +9,11 @@ public class Player
     private int foodAcquired;
     private string spawnAntKey;
     private string cycleSelectedNestKey;
+    private string buildNestKey;
+    private string cursorUpKey;
+    private string cursorDownKey;
+    private string cursorLeftKey;
+    private string cursorRightKey;
 
     public Color Color
     {
@@ -18,23 +23,54 @@ public class Player
     {
         get { return selectedNest; }
     }
+
+    public int FoodAcquired
+    {
+        get { return foodAcquired; }
+    }
     public string SpawnAntKey
     {
         get { return spawnAntKey; }
     }
-
     public string CycleSelectedNestKey
     {
         get { return cycleSelectedNestKey; }
     }
+    public string BuildNestKey
+    {
+        get { return buildNestKey; }
+    }
+    public string CursorUpKey
+    {
+        get { return cursorUpKey; }
+    }
+    public string CursorDownKey
+    {
+        get { return cursorDownKey; }
+    }
+    public string CursorLeftKey
+    {
+        get { return cursorLeftKey; }
+    }
+    public string CursorRightKey
+    {
+        get { return cursorRightKey; }
+    }
 
-    public Player(Color color, string spawnAntKey, string cycleSelectedNestKey)
+    public Player(Color color, string spawnAntKey, string cycleSelectedNestKey, string buildNestKey,
+        string cursorUpKey, string cursorDownKey, string cursorLeftKey, string cursorRightKey)
     {
         this.color= color;
         selectedNest = null;
         foodAcquired = 0;
+
         this.spawnAntKey = spawnAntKey;
         this.cycleSelectedNestKey = cycleSelectedNestKey;
+        this.buildNestKey = buildNestKey;
+        this.cursorUpKey = cursorUpKey;
+        this.cursorDownKey = cursorDownKey;
+        this.cursorLeftKey = cursorLeftKey;
+        this.cursorRightKey = cursorRightKey;
     }
 
     public void SelectNest(Nest n)
@@ -42,8 +78,9 @@ public class Player
         selectedNest = n;
     }
 
-    public void IncrementFoodAcquired()
+    public void IncrementFoodAcquired(int increment = 1)
     {
-        foodAcquired++;
+        if (foodAcquired + increment >= 0)
+            foodAcquired += increment;
     }
 }

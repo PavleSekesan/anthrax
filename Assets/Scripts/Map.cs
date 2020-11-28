@@ -8,6 +8,12 @@ public class Map : MonoBehaviour
     public static float cameraWidth;
     public static float cameraHeight;
     public static float interactRange = 2;
+    private static bool shouldRefresh = false;
+
+    public static void Refresh()
+    {
+        shouldRefresh = true;
+    }
     void Start()
     {
         // Get width and height in world units
@@ -20,7 +26,11 @@ public class Map : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (shouldRefresh)
+        {
+            DrawMap();
+            shouldRefresh = false;
+        }
     }
 
     private Player ClosestPlayer(Vector2 pixel)
@@ -44,7 +54,7 @@ public class Map : MonoBehaviour
         return closestPlayer;
     }
 
-    void DrawMap()
+    private void DrawMap()
     {
         // Draw territory boundaries as a Voronoi diagram
         int textureWidth = (int)cameraWidth;

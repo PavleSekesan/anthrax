@@ -9,9 +9,9 @@ public abstract class Ant
     protected Vector2 position;
     protected float speed;
 
-    public Vector2 Position
+    public Nest Nest
     {
-        get { return position; }
+        get { return nest; }
     }
 
     public Ant(Nest nest)
