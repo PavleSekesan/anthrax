@@ -258,7 +258,7 @@ GameObject:
   - component: {fileID: 589934653}
   - component: {fileID: 589934652}
   m_Layer: 0
-  m_Name: AntSpawner
+  m_Name: AntManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -438,7 +438,7 @@ GameObject:
   - component: {fileID: 2122312705}
   - component: {fileID: 2122312704}
   m_Layer: 0
-  m_Name: FoodSpawner
+  m_Name: FoodManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

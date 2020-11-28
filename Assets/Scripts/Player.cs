@@ -8,6 +8,7 @@ public class Player
     private Nest selectedNest;
     private int foodAcquired;
     private string spawnAntKey;
+    private string cycleSelectedNestKey;
 
     public Color Color
     {
@@ -22,12 +23,18 @@ public class Player
         get { return spawnAntKey; }
     }
 
-    public Player(Color color, string spawnAntKey)
+    public string CycleSelectedNestKey
+    {
+        get { return cycleSelectedNestKey; }
+    }
+
+    public Player(Color color, string spawnAntKey, string cycleSelectedNestKey)
     {
         this.color= color;
         selectedNest = null;
         foodAcquired = 0;
         this.spawnAntKey = spawnAntKey;
+        this.cycleSelectedNestKey = cycleSelectedNestKey;
     }
 
     public void SelectNest(Nest n)

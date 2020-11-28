@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class AntManager : MonoBehaviour
 {
-    private List<Ant> ants;
+    private static List<Ant> ants;
 
-    private void SpawnAnt(Player player)
+    public static void SpawnAnt(Player player)
     {
-        if (Input.GetKeyDown(player.SpawnAntKey))
-        {
-            WorkerAnt newWorkerAnt = new WorkerAnt(player.SelectedNest);
-            ants.Add(newWorkerAnt);
-        }
+        WorkerAnt newWorkerAnt = new WorkerAnt(player.SelectedNest);
+        ants.Add(newWorkerAnt);
     }
     // Start is called before the first frame update
     void Start()
@@ -23,10 +20,6 @@ public class AntManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Spawn
-        foreach (Player player in PlayerManager.Players)
-            SpawnAnt(player);
-
         // Move
         foreach (var ant in ants)
             ant.Move();

@@ -8,6 +8,7 @@ public class Nest
     private Vector2 position;
     private Sprite sprite;
     private Player player;
+    private GameObject nestObject;
 
     public Vector2 Position
     {
@@ -24,10 +25,22 @@ public class Nest
         this.position = position;
         this.player = player;
 
-        GameObject nestObject = new GameObject("Nest");
+        nestObject = new GameObject("Nest");
         nestObject.transform.position = position;
         var spriteRenderer = nestObject.AddComponent<SpriteRenderer>();
         spriteRenderer.sprite = Resources.Load<Sprite>("Sprites/nest");
         spriteRenderer.sortingOrder = -1;
+    }
+
+    public void changeToSelected()
+    {
+        var spriteRendered = nestObject.GetComponent<SpriteRenderer>();
+        spriteRendered.sprite = Resources.Load<Sprite>("Sprites/nestSelected");
+    }
+
+    public void changeToDeselected()
+    {
+        var spriteRendered = nestObject.GetComponent<SpriteRenderer>();
+        spriteRendered.sprite = Resources.Load<Sprite>("Sprites/nest");
     }
 }
