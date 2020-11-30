@@ -6,18 +6,48 @@ public class AntManager : MonoBehaviour
 {
     private static List<Ant> ants;
     private const int startingAntNumber = 5;
-    public static void SpawnAnt(Player player)
+
+    public static List<Ant> Ants
+    {
+        get { return ants; }
+    }
+    public static void SpawnWorkerAnt(Player player)
     {
         WorkerAnt newWorkerAnt = new WorkerAnt(player.SelectedNest);
         ants.Add(newWorkerAnt);
     }
 
-    public static void SpawnAnt(Nest nest)
+    public static void SpawnWorkerAnt(Nest nest)
     {
         WorkerAnt newWorkerAnt = new WorkerAnt(nest);
         ants.Add(newWorkerAnt);
     }
 
+    public static void SpawnWarriorAnt(Player player)
+    {
+        WarriorAnt newWarriorAnt = new WarriorAnt(player.SelectedNest);
+        ants.Add(newWarriorAnt);
+    }
+
+    public static void SpawnWarriorAnt(Nest nest)
+    {
+        WarriorAnt newWarriorAnt = new WarriorAnt(nest);
+        ants.Add(newWarriorAnt);
+    }
+    public static void RemoveAnt()
+    {
+        var antsToRemove = new List<Ant>();
+        foreach (Ant ant in ants)
+        {
+            if (!ant.AntGameObject.activeSelf)
+                antsToRemove.Add(ant);
+        }
+
+        foreach (var antToRemove in antsToRemove)
+        {
+            ants.Remove(antToRemove);
+        }
+    }
     public static void BuildNest(Player player)
     {
         // Find player cursor position
@@ -38,7 +68,7 @@ public class AntManager : MonoBehaviour
         {
             if (workerAnt.Nest.Player == player)
             {
-                Vector2 workerAntPosition = workerAnt.WorkerAntGameObject.transform.position;
+                Vector2 workerAntPosition = workerAnt.AntGameObject.transform.position;
                 float distanceToCursor = Vector2.Distance(workerAntPosition, cursorPosition);
                 if (distanceToCursor < minDistance)
                 {
@@ -58,7 +88,7 @@ public class AntManager : MonoBehaviour
         {
             for (int i = 0; i < startingAntNumber; i++)
             {
-                SpawnAnt(nest);
+                SpawnWorkerAnt(nest);
             }
         }
     }
@@ -67,7 +97,7 @@ public class AntManager : MonoBehaviour
     void Update()
     {
         // Move
-        foreach (var ant in ants)
+        foreach (var ant in new List<Ant>(ants))
             ant.Move();
     }
 }

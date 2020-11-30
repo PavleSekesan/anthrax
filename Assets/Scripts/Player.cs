@@ -7,7 +7,8 @@ public class Player
     private Color color;
     private Nest selectedNest;
     private int foodAcquired;
-    private string spawnAntKey;
+    private string spawnWorkerAntKey;
+    private string spawnWarriorAntKey;
     private string cycleSelectedNestKey;
     private string buildNestKey;
     private string cursorUpKey;
@@ -28,9 +29,13 @@ public class Player
     {
         get { return foodAcquired; }
     }
-    public string SpawnAntKey
+    public string SpawnWorkerAntKey
     {
-        get { return spawnAntKey; }
+        get { return spawnWorkerAntKey; }
+    }
+    public string SpawnWarriorAntKey
+    {
+        get { return spawnWarriorAntKey; }
     }
     public string CycleSelectedNestKey
     {
@@ -57,14 +62,15 @@ public class Player
         get { return cursorRightKey; }
     }
 
-    public Player(Color color, string spawnAntKey, string cycleSelectedNestKey, string buildNestKey,
+    public Player(Color color, string spawnWorkerAntKey, string spawnWarriorAntKey, string cycleSelectedNestKey, string buildNestKey,
         string cursorUpKey, string cursorDownKey, string cursorLeftKey, string cursorRightKey)
     {
         this.color= color;
         selectedNest = null;
         foodAcquired = 0;
 
-        this.spawnAntKey = spawnAntKey;
+        this.spawnWorkerAntKey = spawnWorkerAntKey;
+        this.spawnWarriorAntKey = spawnWarriorAntKey;
         this.cycleSelectedNestKey = cycleSelectedNestKey;
         this.buildNestKey = buildNestKey;
         this.cursorUpKey = cursorUpKey;

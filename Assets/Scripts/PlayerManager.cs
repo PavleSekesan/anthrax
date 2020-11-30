@@ -14,8 +14,8 @@ public class PlayerManager : MonoBehaviour
     void Start()
     {
         players = new List<Player>();
-        players.Add(new Player(Color.green, "space", "tab", "q", "w", "s", "a", "d"));
-        players.Add(new Player(Color.blue, "return", "right shift", "p", "up", "down", "left", "right"));
+        players.Add(new Player(Color.green, "z", "x", "tab", "c", "w", "s", "a", "d"));
+        players.Add(new Player(Color.blue, "i", "o", "right shift", "p", "up", "down", "left", "right"));
     }
 
     // Update is called once per frame
@@ -65,12 +65,20 @@ public class PlayerManager : MonoBehaviour
                 AntManager.BuildNest(player);
             }
 
-            // Spawn ants
-            int workerAntCost = WorkerAnt.foodCost;
-            if (Input.GetKeyDown(player.SpawnAntKey) && player.FoodAcquired >= workerAntCost)
+            // Spawn worker ants
+            int workerAntCost = WorkerAnt.FoodCost;
+            if (Input.GetKeyDown(player.SpawnWorkerAntKey) && player.FoodAcquired >= workerAntCost)
             {
                 player.IncrementFoodAcquired(-workerAntCost);
-                AntManager.SpawnAnt(player);
+                AntManager.SpawnWorkerAnt(player);
+            }
+
+            // Spawn warrior ants
+            int warriorAntCost = WarriorAnt.FoodCost;
+            if (Input.GetKeyDown(player.SpawnWarriorAntKey) && player.FoodAcquired >= warriorAntCost)
+            {
+                player.IncrementFoodAcquired(-warriorAntCost);
+                AntManager.SpawnWarriorAnt(player);
             }
         }
 
