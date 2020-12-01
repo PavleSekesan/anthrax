@@ -9,6 +9,7 @@ public class Map : MonoBehaviour
     public static float cameraHeight;
     public static float interactRange = 2;
     private static bool shouldRefresh = false;
+    private int sortingLayer;
 
     public static void Refresh()
     {
@@ -19,6 +20,7 @@ public class Map : MonoBehaviour
         // Get width and height in world units
         cameraHeight = Camera.main.orthographicSize * 2;
         cameraWidth = cameraHeight * Camera.main.aspect;
+        sortingLayer = -1000;
 
         DrawMap();
     }
@@ -56,21 +58,14 @@ public class Map : MonoBehaviour
 
     private void DrawMap()
     {
-        // Draw territory boundaries as a Voronoi diagram
-        int textureWidth = (int)cameraWidth;
-        int textureHeight = (int)cameraHeight;
-        Texture2D boundaryTexture = new Texture2D(textureWidth, textureHeight);
-        for(int y = 0; y < textureHeight; y++)
+        foreach (Nest nest in NestManager.Nests)
         {
-            for (int x = 0; x < textureWidth; x++)
-            {
-                Vector2 pixel = new Vector2(x, y);
-                Player closestPlayer = ClosestPlayer(pixel);
-                boundaryTexture.SetPixel(x, y, closestPlayer.Color);
-            }
+            GameObject territory = new GameObject("Territory");
+            territory.transform.position = nest.Position;
+            var spriteRenderer = territory.AddComponent<SpriteRenderer>();
+            spriteRenderer.sprite = Resources.Load<Sprite>("Sprites/territory");
+            spriteRenderer.color = nest.Player.Color;
+            spriteRenderer.sortingOrder = sortingLayer++;
         }
-        boundaryTexture.filterMode = FilterMode.Bilinear;
-        boundaryTexture.Apply();
-        GetComponent<SpriteRenderer>().sprite = Sprite.Create(boundaryTexture, new Rect(0, 0, textureWidth, textureHeight), Vector2.one * 0.5f, 1);
     }
 }

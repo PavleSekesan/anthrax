@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class WorkerAnt : Ant
 {
+    public static int FoodCost = 3;
     private float nestConstructionTime;
     private float nestConstructionTimer;
     private Food foodToRunTo;
     private Vector2 buildingSiteLocation = Vector2.negativeInfinity;
+
     public WorkerAnt(Nest nest) : base(nest) 
     {
         speed = 100;
         health = 20;
-        foodCost = 3;
         sensorRange = 50;
         state = "random";
         nestConstructionTime = 10f;
@@ -24,6 +25,32 @@ public class WorkerAnt : Ant
         spriteRenderer.sprite = Resources.Load<Sprite>("Sprites/workerAnt");
         spriteRenderer.sortingOrder = 2;
     }
+
+    protected override void CheckCollisionWithTerritory()
+    {
+        bool collide = true;
+        foreach (Nest nest in NestManager.Nests)
+        {
+            Vector2 antPosition = antGameObject.transform.position;
+            Vector2 nestPosition = nest.Position;
+            float distanceToNest = Vector2.Distance(antPosition, nestPosition);
+            if (nest.Player == this.nest.Player && distanceToNest < Nest.territoryDiameter)
+            {
+                collide = false;
+            }
+            else if (nest.Player != this.nest.Player && distanceToNest < Nest.territoryDiameter)
+            {
+                collide = true;
+            }
+        }
+
+        if (collide)
+        {
+            xComponent = -xComponent;
+            yComponent = -yComponent;
+        }
+    }
+
 
     private void CheckForFood()
     {
@@ -92,9 +119,27 @@ public class WorkerAnt : Ant
 
     public void OrderNestBuild(Vector2 location)
     {
-        state = "build";
-        buildingSiteLocation = location;
-        MoveToPosition(location);
+        bool outOfBounds = true;
+        foreach (Nest nest in NestManager.Nests)
+        {
+            Vector2 nestPosition = nest.Position;
+            float distanceToNest = Vector2.Distance(location, nestPosition);
+            if (nest.Player == this.nest.Player && distanceToNest < Nest.territoryDiameter)
+            {
+                outOfBounds = false;
+            }
+            else if (nest.Player != this.nest.Player && distanceToNest < Nest.territoryDiameter)
+            {
+                outOfBounds = true;
+            }
+        }
+
+        if (!outOfBounds)
+        {
+            state = "build";
+            buildingSiteLocation = location;
+            MoveToPosition(location);
+        }
     }
     public override void Move()
     {
@@ -121,6 +166,7 @@ public class WorkerAnt : Ant
         }
 
         CheckCollisions();
+        CheckCollisionWithTerritory();
 
         Vector3 movementUnitVector = new Vector2(xComponent, yComponent);
         antGameObject.transform.position += movementUnitVector * Time.deltaTime * speed;

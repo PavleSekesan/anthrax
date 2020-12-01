@@ -64,16 +64,19 @@ public class AntManager : MonoBehaviour
 
         WorkerAnt closestWorkerAnt = null;
         float minDistance = float.MaxValue;
-        foreach(WorkerAnt workerAnt in ants)
+        foreach(Ant workerAnt in ants)
         {
-            if (workerAnt.Nest.Player == player)
+            if (workerAnt.GetType().Equals(typeof(WorkerAnt)))
             {
-                Vector2 workerAntPosition = workerAnt.AntGameObject.transform.position;
-                float distanceToCursor = Vector2.Distance(workerAntPosition, cursorPosition);
-                if (distanceToCursor < minDistance)
+                if (workerAnt.Nest.Player == player)
                 {
-                    minDistance = distanceToCursor;
-                    closestWorkerAnt = workerAnt;
+                    Vector2 workerAntPosition = workerAnt.AntGameObject.transform.position;
+                    float distanceToCursor = Vector2.Distance(workerAntPosition, cursorPosition);
+                    if (distanceToCursor < minDistance)
+                    {
+                        minDistance = distanceToCursor;
+                        closestWorkerAnt = (WorkerAnt)workerAnt;
+                    }
                 }
             }
         }

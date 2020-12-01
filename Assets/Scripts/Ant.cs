@@ -11,7 +11,6 @@ public abstract class Ant
     protected float changeDirectionFrequency;
     protected float speed;
     protected float health;
-    protected static int foodCost;
     protected int sensorRange;
     protected string state;
     protected float xComponent;
@@ -24,11 +23,6 @@ public abstract class Ant
     public GameObject AntGameObject
     {
         get { return antGameObject; }
-    }
-
-    public static int FoodCost
-    {
-        get { return foodCost; }
     }
 
     public Ant(Nest nest)
@@ -87,5 +81,6 @@ public abstract class Ant
         }
     }
 
+    protected abstract void CheckCollisionWithTerritory();
     public abstract void Move();
 }

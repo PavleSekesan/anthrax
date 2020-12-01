@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WarriorAnt : Ant
 {
+    public static int FoodCost = 5;
     private int attackRange;
     private float maxDamage;
     private Ant antToFollow;
@@ -14,7 +15,6 @@ public class WarriorAnt : Ant
     {
         speed = 150;
         health = 50;
-        foodCost = 5;
         sensorRange = 50;
         attackRange = 10;
         maxDamage = 50;
@@ -27,6 +27,27 @@ public class WarriorAnt : Ant
         var spriteRenderer = antGameObject.AddComponent<SpriteRenderer>();
         spriteRenderer.sprite = Resources.Load<Sprite>("Sprites/warriorAnt");
         spriteRenderer.sortingOrder = 2;
+    }
+
+    protected override void CheckCollisionWithTerritory()
+    {
+        bool collide = true;
+        foreach (Nest nest in NestManager.Nests)
+        {
+            Vector2 antPosition = antGameObject.transform.position;
+            Vector2 nestPosition = nest.Position;
+            float distanceToNest = Vector2.Distance(antPosition, nestPosition);
+            if (distanceToNest < Nest.territoryDiameter)
+            {
+                collide = false;
+            }
+        }
+
+        if (collide)
+        {
+            xComponent = -xComponent;
+            yComponent = -yComponent;
+        }
     }
 
     private void CheckForAnts()
@@ -101,6 +122,7 @@ public class WarriorAnt : Ant
         }
 
         CheckCollisions();
+        CheckCollisionWithTerritory();
 
         Vector3 movementUnitVector = new Vector2(xComponent, yComponent);
         antGameObject.transform.position += movementUnitVector * Time.deltaTime * speed;

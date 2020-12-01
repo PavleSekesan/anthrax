@@ -6,6 +6,7 @@ using UnityEngine;
 public class Nest
 {
     public const int foodCost = 10;
+    public const int territoryDiameter = 400;
     private Vector2 position;
     private Sprite sprite;
     private Player player;
